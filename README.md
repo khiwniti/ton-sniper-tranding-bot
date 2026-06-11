@@ -71,6 +71,32 @@ Interact with your bot via natural language commands:
 - `/hype <symbol>` - Scans social media to determine the hype score and market mood.
 - `/snipe <address>` - Manually trigger a security check and simulated snipe.
 
+## 🧮 The Mathematics of Sniping (Profit & Speed)
+
+### 1. How Fast to Take Profit?
+In the memecoin trenches, tokens can launch, spike 500%, and crash to zero in under **3 minutes**.
+- **0 to 60 Seconds (The Snipe):** The bot buys in the very first blocks after liquidity is added.
+- **1 to 3 Minutes (The Retail Pump):** Manual traders buy, pushing the price up.
+- **3 to 5 Minutes (The Exit):** The bot takes profit.
+
+*The bot's `advanced-risk-manager` checks prices every ~3 seconds (TON block time) and executes sells instantly when targets are hit.*
+
+### 2. Thorough Profit Calculation (The Reality of Fees)
+`Net Profit = (Gross Sell Value) - (Entry Cost) - (DEX Fees) - (Blockchain Gas) - (Slippage Impact)`
+
+- **DEX Swap Fees:** ~0.3% per swap.
+- **Blockchain Gas:** ~0.04 to 0.06 TON per trade. Total Round-Trip Gas = **~0.10 TON**.
+
+### 🚨 The "< 0.01 TON" Challenge Reality
+While the bot's architecture allows ultra-micro snipes (< 0.01 TON), the math dictates it will result in a net loss even with a 300% pump:
+- Entry: `0.01 TON`
+- Buy Gas: `~0.05 TON`
+- Gross Sell (3x Pump): `0.03 TON`
+- Sell Gas: `~0.05 TON`
+- **Net Profit:** `0.03 - 0.01 - 0.05 - 0.05 = -0.08 TON (LOSS)`
+
+**Golden Rule:** To be mathematically profitable against round-trip gas fees, your minimum Snipe Size should be **0.5 TON to 1.0 TON**.
+
 ## ⚠️ Important Note on Execution
 
 Currently, the `executeRealMainnetTrade()` function in the pipeline is a **Simulated Placeholder**. 
