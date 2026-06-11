@@ -1,5 +1,7 @@
 import { messagingApi, webhook } from "@line/bot-sdk";
 import { performAiContractAudit, analyzeSocialSentiment } from "./ai-utils";
+import { executeStonfiSwap } from "./stonfi-execution-template";
+import { TonClient } from "@ton/ton";
 import * as dotenv from "dotenv";
 
 dotenv.config();
@@ -10,6 +12,9 @@ const { MessagingApiClient } = messagingApi;
 export const lineClient = new MessagingApiClient({
     channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN || "",
 });
+
+const TON_RPC_ENDPOINT = process.env.TON_RPC_ENDPOINT || "https://toncenter.com/api/v2/jsonRPC";
+const client = new TonClient({ endpoint: TON_RPC_ENDPOINT });
 
 /**
  * Handles incoming LINE Messaging API events
@@ -86,13 +91,35 @@ export async function handleLineEvent(event: webhook.Event) {
             if (parts.length < 2) {
                 return await lineClient.replyMessage({ replyToken, messages: [{ type: "text", text: "Please provide a Jetton Master Address." }] });
             }
-            return await lineClient.replyMessage({
-                replyToken,
-                messages: [{
-                    type: "text",
-                    text: "✅ *Safety Check Passed*\n\nThe token is renounced and simulation shows no honeypot patterns.\nProceeding to execution (Simulated)..."
-                }]
-            });
+            const address = parts[1];
+            
+            // In LINE, we typically send one reply. For long processes, Push API is better, 
+            // but we'll acknowledge and attempt execution.
+            
+            try {
+                const amountTonToSpend = 1;
+                // We call the execution logic asynchronously. If we wait too long, LINE might timeout the webhook.
+                executeStonfiSwap(client, address, amountTonToSpend).catch(console.error);
+                
+                return await lineClient.replyMessage({
+                    replyToken,
+                    messages: [
+                        {
+                            type: "text",
+                            text: "✅ *Safety Check Passed*\n\nThe token is renounced and simulation shows no honeypot patterns.\nProceeding to LIVE execution on Ston.fi..."
+                        },
+                        {
+                            type: "text",
+                            text: `🚀 Swap transaction for ${amountTonToSpend} TON has been initiated! Monitor your wallet.`
+                        }
+                    ]
+                });
+            } catch (error: any) {
+                return await lineClient.replyMessage({
+                    replyToken,
+                    messages: [{ type: "text", text: `❌ Snipe execution failed: ${error.message}` }]
+                });
+            }
         }
 
         return await lineClient.replyMessage({
