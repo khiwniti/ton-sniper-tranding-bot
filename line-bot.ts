@@ -13,7 +13,9 @@ export const lineClient = new MessagingApiClient({
     channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN || "",
 });
 
-const TON_RPC_ENDPOINT = process.env.TON_RPC_ENDPOINT || "https://toncenter.com/api/v2/jsonRPC";
+const isTestnet = process.env.NETWORK === "testnet";
+const defaultRpc = isTestnet ? "https://testnet.toncenter.com/api/v2/jsonRPC" : "https://toncenter.com/api/v2/jsonRPC";
+const TON_RPC_ENDPOINT = process.env.TON_RPC_ENDPOINT || defaultRpc;
 const client = new TonClient({ endpoint: TON_RPC_ENDPOINT });
 
 /**

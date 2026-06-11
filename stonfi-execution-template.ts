@@ -49,9 +49,10 @@ export async function executeStonfiSwap(
         // 3. Initialize Ston.fi SDK Routers
         // Uncomment when @ston-fi/sdk is installed
         /*
+        const isTestnet = process.env.NETWORK === "testnet";
         const router = client.open(new DEX.v1.Router({
             revision: "V1",
-            network: "mainnet"
+            network: isTestnet ? "testnet" : "mainnet"
         }));
 
         // In Ston.fi, you don't swap TON directly. You swap proxy TON (pTON).
