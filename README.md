@@ -8,7 +8,7 @@ This project is split into three core components:
 
 1. **The Webhooks (Vercel Serverless)**:
    - Handles incoming commands from **Telegram** and **LINE**.
-   - Executes AI Security Audits (`/audit`) and Sentiment Analysis (`/hype`).
+   - Executes AI Security Audits (`/audit`) and Sentiment Analysis (`/hype`) using **NVIDIA NIM (Llama-3.1)**.
    - Runs the TVM Sandbox simulation to prevent honeypots.
 
 2. **The Risk Manager (`advanced-risk-manager.ts`)**:
@@ -42,6 +42,7 @@ vercel deploy --prod
 Configure your environment variables in the Vercel Dashboard:
 - `TELEGRAM_BOT_TOKEN`
 - `TON_RPC_ENDPOINT` (e.g., https://toncenter.com/api/v2/jsonRPC)
+- `NVIDIA_API_KEY` (Get from build.nvidia.com)
 - `LINE_CHANNEL_ACCESS_TOKEN` (If using LINE)
 - `LINE_CHANNEL_SECRET` (If using LINE)
 
@@ -103,6 +104,26 @@ Currently, the `executeRealMainnetTrade()` function in the pipeline is a **Simul
 To execute real trades with real TON, you must update the execution logic to securely import your wallet mnemonic, construct the `Bag of Cells (BoC)` for the DEX router (e.g., Ston.fi), and broadcast the signed transaction to the TON RPC. 
 
 *Never commit your private keys or mnemonics to GitHub.* Use environment variables.
+
+## 🚀 Real Functionality Transition Checklist
+
+Follow these steps to move from **Simulation** to **Live Trading**:
+
+### Phase 1: The AI "Brain" (NVIDIA NIM)
+- [ ] **Get NVIDIA API Key**: Visit [build.nvidia.com](https://build.nvidia.com/) and generate an API key.
+- [ ] **Add to Vercel**: Add `NVIDIA_API_KEY` to your Vercel Environment Variables.
+- [ ] **Verify `ai-utils.ts`**: The code is already pre-configured to use NVIDIA's Llama-3.1 model.
+
+### Phase 2: The "Hands" (Wallet & Keys)
+- [ ] **Add Mnemonic**: Add `WALLET_MNEMONIC` (your 24 words) to your Vercel Environment Variables.
+- [ ] **Uncomment Execution**: Open `stonfi-execution-template.ts` and remove the comments from the `await walletContract.sendTransfer(...)` block.
+- [ ] **Set Snipe Size**: Open `bot.ts` and set your preferred `amountTonToSpend`.
+
+### Phase 3: The "Eyes" (24/7 Monitoring)
+- [ ] **Deploy Radar to VPS**: Use the provided `vps-deploy.sh` script on an Ubuntu server.
+- [ ] **Get RPC Key**: Get a free API Key from [Toncenter](https://toncenter.com/) to avoid rate limits.
+
+---
 
 ## 📜 License
 MIT License. Proceed at your own risk. The cryptocurrency market, especially memecoins, is highly volatile. This software does not guarantee profits.

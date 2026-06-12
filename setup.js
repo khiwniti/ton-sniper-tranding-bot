@@ -40,12 +40,14 @@ async function runSetup() {
         envContent += `LINE_CHANNEL_SECRET=\n\n`;
     }
 
-    console.log("\n--- 3. Network Configuration ---");
+    console.log("\n--- 3. AI & Network Configuration ---");
+    const nvidiaKey = await askQuestion("Enter your NVIDIA API Key (from build.nvidia.com): ");
     const network = await askQuestion("Use mainnet or testnet? (mainnet/testnet) [default: mainnet]: ");
     const rpcUrl = network.toLowerCase() === 'testnet' 
         ? "https://testnet.toncenter.com/api/v2/jsonRPC" 
         : "https://toncenter.com/api/v2/jsonRPC";
     
+    envContent += `NVIDIA_API_KEY=${nvidiaKey}\n`;
     envContent += `NETWORK=${network.toLowerCase() === 'testnet' ? 'testnet' : 'mainnet'}\n`;
     envContent += `TON_RPC_ENDPOINT=${rpcUrl}\n\n`;
 
