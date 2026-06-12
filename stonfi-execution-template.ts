@@ -1,7 +1,7 @@
 import { TonClient, WalletContractV4, internal } from "@ton/ton";
 import { mnemonicToPrivateKey } from "@ton/crypto";
 // Note: You must run `npm install @ston-fi/sdk` to use this
-// import { DEX, pTON } from "@ston-fi/sdk"; 
+import { DEX, pTON } from "@ston-fi/sdk"; 
 import * as dotenv from "dotenv";
 
 dotenv.config();
@@ -48,7 +48,7 @@ export async function executeStonfiSwap(
 
         // 3. Initialize Ston.fi SDK Routers
         // Uncomment when @ston-fi/sdk is installed
-        /*
+        
         const isTestnet = process.env.NETWORK === "testnet";
         const router = client.open(new DEX.v1.Router({
             revision: "V1",
@@ -87,7 +87,6 @@ export async function executeStonfiSwap(
                 })
             ]
         });
-        */
 
         console.log(`[EXECUTION] ✅ SWAP BROADCASTED SUCCESSFULLY!`);
         console.log(`[EXECUTION] Awaiting confirmation... Monitor price to trigger Auto-Sell.`);

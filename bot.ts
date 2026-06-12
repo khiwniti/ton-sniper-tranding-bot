@@ -12,7 +12,10 @@ if (!token) throw new Error("TELEGRAM_BOT_TOKEN is not set");
 const isTestnet = process.env.NETWORK === "testnet";
 const defaultRpc = isTestnet ? "https://testnet.toncenter.com/api/v2/jsonRPC" : "https://toncenter.com/api/v2/jsonRPC";
 const TON_RPC_ENDPOINT = process.env.TON_RPC_ENDPOINT || defaultRpc;
-const client = new TonClient({ endpoint: TON_RPC_ENDPOINT });
+const client = new TonClient({ 
+    endpoint: TON_RPC_ENDPOINT,
+    apiKey: process.env.TON_API_KEY
+});
 
 export const bot = new Bot(token);
 
