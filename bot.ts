@@ -95,8 +95,8 @@ bot.command("snipe", async (ctx) => {
     
     try {
         // Execute the real swap logic
-        // For demonstration, we use a fixed amount of 1 TON
-        const amountTonToSpend = 1; 
+        // Initial test amount: 0.5 TON (Low risk)
+        const amountTonToSpend = 0.5; 
         await executeStonfiSwap(client, address, amountTonToSpend);
         await ctx.reply(`🚀 Swap transaction for ${amountTonToSpend} TON has been broadcasted! Monitoring for exit...`);
     } catch (error: any) {

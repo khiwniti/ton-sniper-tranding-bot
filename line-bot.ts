@@ -102,7 +102,7 @@ export async function handleLineEvent(event: webhook.Event) {
             // but we'll acknowledge and attempt execution.
             
             try {
-                const amountTonToSpend = 1;
+                const amountTonToSpend = 0.5;
                 // We call the execution logic asynchronously. If we wait too long, LINE might timeout the webhook.
                 executeStonfiSwap(client, address, amountTonToSpend).catch(console.error);
                 
