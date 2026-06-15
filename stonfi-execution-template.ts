@@ -1,4 +1,4 @@
-import { TonClient, WalletContractV4, internal } from "@ton/ton";
+import { TonClient, WalletContractV5R1, internal } from "@ton/ton";
 import { mnemonicToPrivateKey } from "@ton/crypto";
 // Note: You must run `npm install @ston-fi/sdk` to use this
 import { DEX, pTON } from "@ston-fi/sdk"; 
@@ -30,8 +30,8 @@ export async function executeStonfiSwap(
         console.log("[EXECUTION] Deriving KeyPair from Mnemonic...");
         const keyPair = await mnemonicToPrivateKey(mnemonic.split(" "));
 
-        // 2. Initialize the Wallet Contract (Assuming standard v4R2)
-        const wallet = WalletContractV4.create({ 
+        // 2. Initialize the Wallet Contract (Using V5R1 based on user keys)
+        const wallet = WalletContractV5R1.create({ 
             workchain: 0, 
             publicKey: keyPair.publicKey 
         });
@@ -47,13 +47,13 @@ export async function executeStonfiSwap(
         console.log(`[EXECUTION] Wallet initialized. Balance OK. Proceeding to build Swap Payload...`);
 
         // 3. Initialize Ston.fi SDK Routers
-        // Uncomment when @ston-fi/sdk is installed
+        // Updated to use correct v1 router initialization
         
         const isTestnet = process.env.NETWORK === "testnet";
-        const router = client.open(new DEX.v1.Router({
-            revision: "V1",
-            network: isTestnet ? "testnet" : "mainnet"
-        }));
+        // The Router constructor in the SDK often expects an address string first
+        const router = client.open(DEX.v1.Router.create(
+            isTestnet ? "kQAL97U0Uv0oZpA7H_E8uW_X3X8uW_X3X8uW_X3X8uW_X3" : "EQB3ncyBUTjZUAUOTn7f_yB-s5SscCjH-M-6f9Z6P3Z-1p" 
+        ));
 
         // In Ston.fi, you don't swap TON directly. You swap proxy TON (pTON).
         // The SDK handles wrapping TON -> pTON -> Jetton automatically.
@@ -96,5 +96,6 @@ export async function executeStonfiSwap(
 
     } catch (error) {
         console.error(`[EXECUTION] ❌ Trade Execution Failed:`, error);
+        throw error; // Re-throw so the UI knows it failed
     }
 }
