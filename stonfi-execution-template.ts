@@ -1,4 +1,4 @@
-import { TonClient, WalletContractV5R1, internal } from "@ton/ton";
+import { TonClient, WalletContractV5R1, internal, SendMode } from "@ton/ton";
 import { mnemonicToPrivateKey } from "@ton/crypto";
 // Note: You must run `npm install @ston-fi/sdk` to use this
 import { DEX, pTON } from "@ston-fi/sdk"; 
@@ -79,6 +79,7 @@ export async function executeStonfiSwap(
         await walletContract.sendTransfer({
             seqno,
             secretKey: keyPair.secretKey,
+            sendMode: SendMode.PAY_GAS_SEPARATELY,
             messages: [
                 internal({
                     to: txParams.to,
