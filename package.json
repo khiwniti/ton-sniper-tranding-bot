@@ -15,6 +15,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@dedust/sdk": "^0.8.7",
     "@line/bot-sdk": "^11.0.1",
     "@ston-fi/sdk": "^2.7.0",
     "@ton/core": "^0.63.1",
