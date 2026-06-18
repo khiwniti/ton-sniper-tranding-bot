@@ -123,6 +123,17 @@ Follow these steps to move from **Simulation** to **Live Trading**:
 - [ ] **Deploy Radar to VPS**: Use the provided `vps-deploy.sh` script on an Ubuntu server.
 - [ ] **Get RPC Key**: Get a free API Key from [Toncenter](https://toncenter.com/) to avoid rate limits.
 
+## 🤖 Advanced: Teleton AI Agent Integration
+
+The project now includes `teleton-plugin.ts`, which is compatible with the **Teleton AI Agent framework** ([teletonagent.dev](https://teletonagent.dev/)).
+
+This allows you to transform your bot from a simple chat-based tool into an **Autonomous Userbot**.
+- **Group Monitoring**: The AI agent can listen to "alpha" or "signal" groups.
+- **Autonomous Decision Making**: Uses LLMs (Claude/GPT-4o) to decide which tokens are worth sniping based on chat context.
+- **Native Tools**: Exposes `audit_and_snipe` as a tool the AI can use whenever it detects a contract link.
+
+To use this, install the Teleton CLI (`npm install -g teleton`) and register the `SniperPlugin`.
+
 ---
 
 ## 📜 License
